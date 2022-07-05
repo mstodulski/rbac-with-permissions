@@ -1,0 +1,23 @@
+{
+	"name": "mstodulski/rbac-with-permissions",
+	"license": "MIT",
+	"description": "",
+	"require": {
+		"php": ">=8.1",
+		"phpunit/phpunit": "9.5.*"
+	},
+	"keywords": ["rbac", "permissions"],
+	"homepage": "https://devsprint.pl",
+	"authors": [
+		{
+			"name": "Marcin Stodulski",
+			"homepage": "https://devsprint.pl",
+			"role": "Developer"
+		}
+	],
+	"autoload": {
+		"psr-4": {
+			"mstodulski\\RbacWithPermissions\\": "src"
+		}
+	}
+}
