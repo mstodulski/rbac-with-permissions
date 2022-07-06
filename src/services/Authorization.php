@@ -74,6 +74,16 @@ class Authorization {
         return $this->permissionsTree;
     }
 
+    public function setRolesTree(array $rolesTree): void
+    {
+        $this->rolesTree = $rolesTree;
+    }
+
+    public function getRolesTree(): array
+    {
+        return $this->rolesTree;
+    }
+
     public function getAllSubRolesAndPermissionsForRole(RoleInterface $role): array
     {
         $rolesArray = [$role->getCode()];
