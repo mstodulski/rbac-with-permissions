@@ -53,7 +53,7 @@ class Role implements RoleInterface
         $this->parent = $parent;
     }
 
-    public function getPermissions(): array
+    public function getPermissions()
     {
         return $this->permissions;
     }
