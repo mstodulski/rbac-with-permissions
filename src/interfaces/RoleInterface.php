@@ -14,6 +14,6 @@ interface RoleInterface
 {
     public function getParent(): ?RoleInterface;
     public function getCode(): string;
-    public function getPermissions();
+    public function getPermissions(): array;
     public function isHasAllPermissions(): bool;
 }

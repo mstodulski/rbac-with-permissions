@@ -19,5 +19,9 @@
 		"psr-4": {
 			"mstodulski\\RbacWithPermissions\\": "src"
 		}
+	},
+	"require-dev": {
+		"vimeo/psalm": "^4.28",
+		"psalm/plugin-symfony": "^3.1"
 	}
 }

@@ -18,9 +18,10 @@ class Role implements RoleInterface
     private string $code = '';
     private ?self $parent = null;
     private string $name = '';
-    /** @var $permissions PermissionInterface[] */
+    /** @var PermissionInterface[] $permissions */
     private array $permissions = [];
     private bool $hasAllPermissions = false;
+    public ?array $children = null;
 
     public function getCode(): string
     {
@@ -47,7 +48,7 @@ class Role implements RoleInterface
         return $this->parent;
     }
 
-    public function setParent(?RoleInterface $parent): void
+    public function setParent(?Role $parent): void
     {
         $this->parent = $parent;
     }
@@ -62,7 +63,7 @@ class Role implements RoleInterface
         $this->permissions = $permissions;
     }
 
-    public function addPermission(PermissionInterface $permission)
+    public function addPermission(PermissionInterface $permission): void
     {
         $this->permissions[$permission->getCode()] = $permission;
     }

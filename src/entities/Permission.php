@@ -17,6 +17,7 @@ class Permission implements PermissionInterface
     private ?self $parent = null;
     private string $code = '';
     private string $name = '';
+    public ?array $children = null;
 
     public function setCode(string $code): void
     {
@@ -38,12 +39,12 @@ class Permission implements PermissionInterface
         $this->name = $name;
     }
 
-    public function getParent(): ?PermissionInterface
+    public function getParent(): ?Permission
     {
         return $this->parent;
     }
 
-    public function setParent(?PermissionInterface $parent): void
+    public function setParent(?Permission $parent): void
     {
         $this->parent = $parent;
     }

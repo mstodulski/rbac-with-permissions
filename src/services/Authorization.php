@@ -10,6 +10,8 @@
 
 namespace mstodulski\RbacWithPermissions\services;
 
+use mstodulski\RbacWithPermissions\entities\Permission;
+use mstodulski\RbacWithPermissions\entities\Role;
 use mstodulski\RbacWithPermissions\interfaces\PermissionInterface;
 use mstodulski\RbacWithPermissions\interfaces\RoleInterface;
 
@@ -48,7 +50,7 @@ class Authorization {
         return false;
     }
 
-    public function roleHasPermission(RoleInterface $role, $permissionCode): bool
+    public function roleHasPermission(RoleInterface $role, string $permissionCode): bool
     {
         if ($role->isHasAllPermissions()) {
             return true;
@@ -104,58 +106,64 @@ class Authorization {
         return [$rolesArray, $permissionsArray];
     }
 
-    private function getSubPermissionsForPermissions(&$permissionsArray, $permissionsTree = null) : void
+    private function getSubPermissionsForPermissions(array &$permissionsArray, ?array $permissionsTree = null) : void
     {
-        /** @var PermissionInterface $permission */
-        foreach ($permissionsTree as $permission) {
-            if (in_array($permission->getCode(), $permissionsArray)) {
-                if (isset($permission->children)) {
-                    /** @var PermissionInterface $childPermission */
-                    foreach ($permission->children as $childPermission) {
-                        $permissionsArray[$childPermission->getCode()] = $childPermission->getCode();
-                    }
-                }
-            }
-
-            if (isset($permission->children)) {
-                $this->getSubPermissionsForPermissions($permissionsArray, $permission->children);
-            }
-        }
-    }
-
-    private function getSubRolesCodes(&$rolesArray, &$permissionsArray, $rolesTree = null) : void
-    {
-        /** @var RoleInterface $role */
-        foreach ($rolesTree as $role) {
-            if (in_array($role->getCode(), $rolesArray)) {
-                foreach ($role->getPermissions() as $permission) {
-                    $permissionsArray[$permission->getCode()] = $permission->getCode();
-                }
-
-                if (isset($role->children)) {
-                    /** @var RoleInterface $childRole */
-                    foreach ($role->children as $childRole) {
-                        $rolesArray[] = $childRole->getCode();
-                        foreach ($childRole->getPermissions() as $permission) {
-                            $permissionsArray[$permission->getCode()] = $permission->getCode();
+        if (!empty($permissionsTree)) {
+            /** @var Permission $permission */
+            foreach ($permissionsTree as $permission) {
+                if (in_array($permission->getCode(), $permissionsArray)) {
+                    if (isset($permission->children)) {
+                        /** @var Permission $childPermission */
+                        foreach ($permission->children as $childPermission) {
+                            $permissionsArray[$childPermission->getCode()] = $childPermission->getCode();
                         }
                     }
                 }
-            }
 
-            if (isset($role->children)) {
-                $this->getSubRolesCodes($rolesArray, $permissionsArray, $role->children);
+                if (isset($permission->children)) {
+                    $this->getSubPermissionsForPermissions($permissionsArray, $permission->children);
+                }
             }
         }
     }
 
-    private function buildTree(array $elements, $parentId = null): array
+    private function getSubRolesCodes(array &$rolesArray, array &$permissionsArray, array $rolesTree = null) : void
+    {
+        if (!empty($rolesTree)) {
+            /** @var Role $role */
+            foreach ($rolesTree as $role) {
+                if (in_array($role->getCode(), $rolesArray)) {
+                    foreach ($role->getPermissions() as $permission) {
+                        $permissionsArray[$permission->getCode()] = $permission->getCode();
+                    }
+
+                    if (isset($role->children)) {
+                        /** @var Role $childRole */
+                        foreach ($role->children as $childRole) {
+                            $rolesArray[] = $childRole->getCode();
+                            foreach ($childRole->getPermissions() as $permission) {
+                                $permissionsArray[$permission->getCode()] = $permission->getCode();
+                            }
+                        }
+                    }
+                }
+
+                if (isset($role->children)) {
+                    $this->getSubRolesCodes($rolesArray, $permissionsArray, $role->children);
+                }
+            }
+        }
+    }
+
+    private function buildTree(array $elements, string $parentId = null): array
     {
         $branch = array();
 
-        /** @var RoleInterface|PermissionInterface $element */
+        /** @var Role|Permission $element */
         foreach ($elements as $element) {
-            $elementParentId = ($element->getParent() !== null) ? $element->getParent()->getCode() : null;
+            /** @var ?Role|?Permission $parentElement */
+            $parentElement = $element->getParent();
+            $elementParentId = ($parentElement !== null) ? $parentElement->getCode() : null;
             if ($elementParentId == $parentId) {
                 $children = $this->buildTree($elements, $element->getCode());
                 if ($children) {
