@@ -16,12 +16,13 @@ use mstodulski\RbacWithPermissions\interfaces\RoleInterface;
 class Role implements RoleInterface
 {
     private string $code = '';
-    private ?self $parent = null;
+    /** @var ?Role|?RoleInterface */
+    private self|RoleInterface|null $parent = null;
     private string $name = '';
     /** @var PermissionInterface[] $permissions */
     private array $permissions = [];
     private bool $hasAllPermissions = false;
-    public ?array $children = null;
+    public mixed $children = null;
 
     public function getCode(): string
     {
@@ -48,12 +49,12 @@ class Role implements RoleInterface
         return $this->parent;
     }
 
-    public function setParent(?Role $parent): void
+    public function setParent(?RoleInterface $parent): void
     {
         $this->parent = $parent;
     }
 
-    public function getPermissions()
+    public function getPermissions(): array
     {
         return $this->permissions;
     }

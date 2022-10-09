@@ -14,10 +14,11 @@ use mstodulski\RbacWithPermissions\interfaces\PermissionInterface;
 
 class Permission implements PermissionInterface
 {
-    private ?self $parent = null;
+    /** @var ?Permission|?PermissionInterface */
+    private self|PermissionInterface|null $parent = null;
     private string $code = '';
     private string $name = '';
-    public ?array $children = null;
+    public mixed $children = null;
 
     public function setCode(string $code): void
     {
@@ -39,12 +40,12 @@ class Permission implements PermissionInterface
         $this->name = $name;
     }
 
-    public function getParent(): ?Permission
+    public function getParent(): ?PermissionInterface
     {
         return $this->parent;
     }
 
-    public function setParent(?Permission $parent): void
+    public function setParent(?PermissionInterface $parent): void
     {
         $this->parent = $parent;
     }

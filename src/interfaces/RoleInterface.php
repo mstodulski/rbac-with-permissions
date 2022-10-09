@@ -14,6 +14,7 @@ interface RoleInterface
 {
     public function getParent(): ?RoleInterface;
     public function getCode(): string;
+    //the lack of the returned type allows you to program it yourself i your classes
     public function getPermissions();
     public function isHasAllPermissions(): bool;
 }
