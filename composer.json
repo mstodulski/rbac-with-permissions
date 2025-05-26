@@ -3,7 +3,7 @@
 	"license": "MIT",
 	"description": "",
 	"require": {
-		"php": ">=8.1",
+		"php": ">=8.3",
 		"phpunit/phpunit": "*"
 	},
 	"keywords": ["rbac", "permissions"],
@@ -21,7 +21,7 @@
 		}
 	},
 	"require-dev": {
-		"vimeo/psalm": "^5.15",
-		"psalm/plugin-symfony": "^5.0"
+		"vimeo/psalm": "^6.11",
+		"psalm/plugin-symfony": "^5.2"
 	}
 }

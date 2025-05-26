@@ -15,6 +15,11 @@ use mstodulski\RbacWithPermissions\entities\Role;
 use mstodulski\RbacWithPermissions\interfaces\PermissionInterface;
 use mstodulski\RbacWithPermissions\interfaces\RoleInterface;
 
+/**
+ * psalm notice: https://psalm.dev/361
+ * wyjaśnienie: psalm nie wie tego, że ta klasa może być nadpisana w projekcie używającym tej biblioteki
+ * @psalm-suppress ClassMustBeFinal
+ */
 class Authorization {
 
     private array $roles = [];
@@ -106,10 +111,14 @@ class Authorization {
         return [$rolesArray, $permissionsArray];
     }
 
-    private function getSubPermissionsForPermissions(array &$permissionsArray, array $permissionsTree = null) : void
+    /**
+     * @param array<array-key, string> $permissionsArray
+     * @param null|array<array-key, PermissionInterface> $permissionsTree
+     * @return void
+     */
+    private function getSubPermissionsForPermissions(array &$permissionsArray, ?array $permissionsTree = null) : void
     {
-        if (!empty($permissionsTree)) {
-            /** @var PermissionInterface $permission */
+        if (is_array($permissionsTree) && count($permissionsTree) > 0) {
             foreach ($permissionsTree as $permission) {
                 if (in_array($permission->getCode(), $permissionsArray)) {
                     /** @var Permission $permission */
@@ -129,10 +138,15 @@ class Authorization {
         }
     }
 
-    private function getSubRolesCodes(array &$rolesArray, array &$permissionsArray, array $rolesTree = null) : void
+    /**
+     * @param array<array-key, string> $rolesArray
+     * @param array<array-key, mixed|string> $permissionsArray
+     * @param null|array<array-key, RoleInterface> $rolesTree
+     * @return void
+     */
+    private function getSubRolesCodes(array &$rolesArray, array &$permissionsArray, ?array $rolesTree = null) : void
     {
-        if (!empty($rolesTree)) {
-            /** @var RoleInterface $role */
+        if (is_array($rolesTree) && count($rolesTree) > 0) {
             foreach ($rolesTree as $role) {
                 if (in_array($role->getCode(), $rolesArray)) {
                     foreach ($role->getPermissions() as $permission) {

@@ -12,7 +12,13 @@ namespace mstodulski\RbacWithPermissions\entities;
 
 use mstodulski\RbacWithPermissions\interfaces\PermissionInterface;
 use mstodulski\RbacWithPermissions\interfaces\RoleInterface;
+use Override;
 
+/**
+ * psalm notice: https://psalm.dev/361
+ * wyjaśnienie: psalm nie wie tego, że ta klasa może być nadpisana w projekcie używającym tej biblioteki
+ * @psalm-suppress ClassMustBeFinal
+ */
 class Role implements RoleInterface
 {
     private string $code = '';
@@ -24,6 +30,7 @@ class Role implements RoleInterface
     private bool $hasAllPermissions = false;
     public mixed $children = null;
 
+    #[Override]
     public function getCode(): string
     {
         return $this->code;
@@ -44,6 +51,7 @@ class Role implements RoleInterface
         $this->name = $name;
     }
 
+    #[Override]
     public function getParent(): ?RoleInterface
     {
         return $this->parent;
@@ -54,6 +62,7 @@ class Role implements RoleInterface
         $this->parent = $parent;
     }
 
+    #[Override]
     public function getPermissions(): array
     {
         return $this->permissions;
@@ -69,6 +78,7 @@ class Role implements RoleInterface
         $this->permissions[$permission->getCode()] = $permission;
     }
 
+    #[Override]
     public function isHasAllPermissions(): bool
     {
         return $this->hasAllPermissions;

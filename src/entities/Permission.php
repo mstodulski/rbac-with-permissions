@@ -11,7 +11,13 @@
 namespace mstodulski\RbacWithPermissions\entities;
 
 use mstodulski\RbacWithPermissions\interfaces\PermissionInterface;
+use Override;
 
+/**
+ * psalm notice: https://psalm.dev/361
+ * wyjaśnienie: psalm nie wie tego, że ta klasa może być nadpisana w projekcie używającym tej biblioteki
+ * @psalm-suppress ClassMustBeFinal
+ */
 class Permission implements PermissionInterface
 {
     /** @var ?Permission|?PermissionInterface */
@@ -25,6 +31,7 @@ class Permission implements PermissionInterface
         $this->code = $code;
     }
 
+    #[Override]
     public function getCode(): string
     {
         return $this->code;
@@ -40,6 +47,7 @@ class Permission implements PermissionInterface
         $this->name = $name;
     }
 
+    #[Override]
     public function getParent(): ?PermissionInterface
     {
         return $this->parent;
